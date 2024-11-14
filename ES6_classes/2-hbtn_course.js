@@ -32,7 +32,7 @@ class HolbertonCourse {
 
   set length(value) {
     if (typeof value !== 'number') {
-      throw new TypeError('length must');
+      throw new TypeError('length must be a number');
     }
     this._length = value;
   }
