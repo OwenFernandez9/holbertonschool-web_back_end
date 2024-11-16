@@ -39,7 +39,7 @@ class Pricing {
         return `${this._amount} ${this.currency.currency_name} (${this.currency.currency_code})`;
     }
 
-    estatic convertPrice(amount, conversionRate){
+    static convertPrice(amount, conversionRate){
         return amount * conversionRate
     }
 
