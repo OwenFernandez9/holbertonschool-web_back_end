@@ -3,7 +3,7 @@ import Currency from './3-currency';
 class Pricing {
   constructor(amount, currency) {
     if (typeof amount !== 'number') {
-      throw TypeError('amount must be a number');
+      throw new TypeError('amount must be a number');
     }
 
     if (!(currency instanceof Currency)) {
@@ -37,7 +37,7 @@ class Pricing {
   }
 
   displayFullPrice() {
-    return `${this._amount} ${this.currency.currency_name} (${this.currency.currency_code})`;
+    return `${this._amount} ${this._currency.currency_name} (${this._currency.currency_code})`;
   }
 
   static convertPrice(amount, conversionRate) {
