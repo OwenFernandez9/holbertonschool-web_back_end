@@ -1,46 +1,47 @@
 import Currency from './3-currency';
 
 class Pricing {
-    constructor(amount, currency){
-        if (typeof amount !== 'number') {
-            throw TypeError('amount must be a number')
-        }
-
-        if (!(currency instanceof Currency)) {
-            throw Error('The currency parameter must be an instance of the Currency class')
-        }
-
-        this.amount = amount;
-        this.currency = currency
+  constructor(amount, currency) {
+    if (typeof amount !== 'number') {
+      throw TypeError('amount must be a number');
     }
 
-    get amount() {
-        return this.amount;
+    if (!(currency instanceof Currency)) {
+      throw Error('The currency parameter must be an instance of the Currency class');
     }
 
-    set amount(value) {
-        if (typeof value !== 'number'){
-            throw new TypeError ('amount must be a number');
-        }
-        this.amount = value;
-    }
+    this._amount = amount;
+    this._currency = currency;
+  }
 
-    get currency() {
-        return this.currency;
-    }
+  get amount() {
+    return this._amount;
+  }
 
-    set currency(value) {
-        if (!(value instanceof Currency)) {
-            throw Error('The currency parameter must be an instance of the Currency class')
-        }
+  set amount(value) {
+    if (typeof value !== 'number') {
+      throw new TypeError('amount must be a number');
     }
+    this._amount = value;
+  }
 
-    displayFullPrice() {
-        return `${this._amount} ${this.currency.currency_name} (${this.currency.currency_code})`;
+  get currency() {
+    return this._currency;
+  }
+
+  set currency(value) {
+    if (!(value instanceof Currency)) {
+      throw Error('The currency parameter must be an instance of the Currency class');
     }
+    this._currency = value;
+  }
 
-    static convertPrice(amount, conversionRate){
-        return amount * conversionRate
-    }
+  displayFullPrice() {
+    return `${this._amount} ${this._currency.currency_name} (${this._currency.currency_code})`;
+  }
 
+  static convertPrice(amount, conversionRate) {
+    return amount * conversionRate;
+  }
 }
+export default Pricing;
