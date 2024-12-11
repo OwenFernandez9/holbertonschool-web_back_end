@@ -2,10 +2,10 @@
 """
 In this module, the function element_length is defined.
 """
-from typing import List, Sequence, Tuple
+from typing import Iterable,List, Sequence, Tuple
 
 
-def element_length(lst: List[Sequence]) -> List[Tuple[Sequence, int]]:
+def element_length(lst: Iterable[Sequence]) -> List[Tuple[Sequence, int]]:
     """
     The element_length function is used to return values with the appropriate types
     """
