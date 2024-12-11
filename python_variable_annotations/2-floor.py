@@ -5,7 +5,7 @@ In this module, the function floor is defined.
 import math
 
 
-def floor(n: float) -> float:
+def floor(n: float) -> int:
     """
     The floor function is used to returns the floor of the float.
     """
