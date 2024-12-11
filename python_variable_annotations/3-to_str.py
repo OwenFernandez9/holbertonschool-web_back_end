@@ -8,4 +8,4 @@ def to_str(n: float) -> str:
     """
     The to_str function is used to returns the string representation of the float.
     """
-    return n
+    return str(n)
