@@ -1,4 +1,4 @@
-#!/bin/env python3
+#!/usr/bin/env python3
 """
 In this module, the function make_multiplier is defined.
 """
