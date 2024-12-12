@@ -1,4 +1,4 @@
-#!/usr/bin/env pyhton3
+#!/usr/bin/env python3
 """
 this module contains a function
 """
@@ -7,7 +7,7 @@ import random
 from typing import Generator
 
 
-async def async_generator() -> Generator[float, None, None]: # type: ignore
+async def async_generator() -> Generator[float, None, None]:
     """
     this function return random number between 0 and 10.
     """
