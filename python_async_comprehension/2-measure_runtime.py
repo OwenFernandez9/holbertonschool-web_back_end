@@ -4,10 +4,11 @@ this module contains a function
 """
 import asyncio
 import time
+from typing import List
 async_comprehension = __import__("1-async_comprehension").async_comprehension
 
 
-async def measure_runtime() -> float:
+async def measure_runtime() -> List[float]:
     """
     this function should measure the total runtime and return it.
     """
