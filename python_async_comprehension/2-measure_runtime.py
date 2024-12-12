@@ -4,15 +4,14 @@ this module contains a function
 """
 import asyncio
 import time
-from typing import List
 async_comprehension = __import__("1-async_comprehension").async_comprehension
 
 
-async def measure_runtime() -> List[float]:
+async def measure_runtime() -> float:
     """
     this function should measure the total runtime and return it.
     """
-    start_time = asyncio.get_event_loop.time()
+    start_time = time.perf_counter()
 
     asyncio.gather(
         async_comprehension(),
@@ -20,6 +19,6 @@ async def measure_runtime() -> List[float]:
         async_comprehension(),
         async_comprehension()
     )
-    end_time = time.time()
+    end_time = time.perf_counter()
     total_time = (end_time - start_time)
     return total_time
