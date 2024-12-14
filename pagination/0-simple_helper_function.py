@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from typing import Tuple
 """
-This module declares the function index_range
+This module contains the function 'index_range'.
 """
 
 
