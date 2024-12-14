@@ -1,4 +1,4 @@
-#!/usr/bin/dev python3
+#!/usr/bin/env python3
 from typing import Tuple
 
 
