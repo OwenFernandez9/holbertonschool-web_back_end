@@ -1,7 +1,11 @@
 // my comment
 mongo --quiet --eval "
+    print('MongoDB shell version ' + db.version());
+  print('connecting to: ' + db.getMongo().toString());
+  print('MongoDB server version: ' + db.version());
   var databases = db.adminCommand('listDatabases').databases;
   databases.forEach(function(database) {
-    print(database.name + '\t' + (database.sizeOnDisk / 1024 / 1024 / 1024).toFixed(3) + 'GB');
+    print(database.name + '\t' + database.sizeOnDisk / 1024 / 1024 + 'MB');
   });
+  print('bye');
 "
