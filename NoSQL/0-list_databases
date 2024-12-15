@@ -1,2 +1,2 @@
-#!/bin/bash
+// my comment
 mongo --quiet --eval "printjson(db.adminCommand('listDatabases'))"
