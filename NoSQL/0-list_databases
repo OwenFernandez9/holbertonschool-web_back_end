@@ -1,2 +1,6 @@
 // my comment
-mongo --quiet --eval "printjson(db.adminCommand('listDatabases'))"
+mongo --quiet --eval "var databases = db.adminCommand('listDatabases').databases;
+  databases.forEach(function(database) {
+    print(database.name);
+  });
+"
