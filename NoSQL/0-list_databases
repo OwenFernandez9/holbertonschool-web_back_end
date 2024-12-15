@@ -1,6 +1,7 @@
 // my comment
-mongo --quiet --eval "var databases = db.adminCommand('listDatabases').databases;
+mongo --quiet --eval "
+  var databases = db.adminCommand('listDatabases').databases;
   databases.forEach(function(database) {
-    print(database.name);
+    print(database.name + '\t' + (database.sizeOnDisk / 1024 / 1024 / 1024).toFixed(3) + 'GB');
   });
 "
