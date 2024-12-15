@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
+"""
+This module add the function 'get_page'.
+"""
 from typing import Tuple
 import csv
 import math
 from typing import List
-"""
-This module contains the function 'index_range'.
-"""
 
 
 def index_range(page, page_size) -> Tuple[int, int]:
