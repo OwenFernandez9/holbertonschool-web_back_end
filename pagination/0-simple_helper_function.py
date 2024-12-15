@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-from typing import Tuple
 """
 This module contains the function 'index_range'.
 """
+from typing import Tuple
 
 
 def index_range(page, page_size) -> Tuple[int, int]:
