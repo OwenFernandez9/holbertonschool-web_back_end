@@ -7,7 +7,7 @@ function countStudents(pathToFile) {
       if (err) {
         reject(new Error('Cannot load the database'));
       } else {
-        const lines = data.split('\n').filter(line => line.trim() !== '');
+        const lines = data.split('\n').filter((line) => line.trim() !== '');
         const totalStudents = lines.length - 1;
         const fields = {};
 
@@ -22,7 +22,7 @@ function countStudents(pathToFile) {
         });
 
         let result = `Number of students: ${totalStudents}\n`;
-        Object.keys(fields).forEach(field => {
+        Object.keys(fields).forEach((field) => {
           result += `Number of students in ${field}: ${fields[field].length}. List: ${fields[field].join(', ')}\n`;
         });
 
@@ -44,12 +44,12 @@ const app = http.createServer((req, res) => {
       res.end('Database file is required');
     } else {
       countStudents(dbPath)
-        .then(result => {
+        .then((result) => {
           res.statusCode = 200;
           res.setHeader('Content-Type', 'text/plain');
           res.end(`This is the list of our students\n${result}`);
         })
-        .catch(error => {
+        .catch((error) => {
           res.statusCode = 500;
           res.end(error.message);
         });
