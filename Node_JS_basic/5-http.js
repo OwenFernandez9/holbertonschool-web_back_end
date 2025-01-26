@@ -15,8 +15,8 @@ const app = http.createServer((req, res) => {
     res.write('This is the list of our students\n');
 
     countStudents(path)
-      .then(() => {
-        res.end('Done!');
+      .then((studentsData) => {
+        res.end(studentsData);
       })
       .catch((error) => {
         res.statusCode = 500;
