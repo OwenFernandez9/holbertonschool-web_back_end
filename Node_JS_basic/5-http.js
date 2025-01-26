@@ -22,7 +22,7 @@ const app = http.createServer((req, res) => {
       });
   } else {
     res.statusCode = 404;
-    res.end('Not Found'); 
+    res.end('Not Found');
   }
 });
 
