@@ -12,6 +12,8 @@ const app = http.createServer((req, res) => {
     const path = process.argv[2];
     res.writeHead(200, { 'Content-Type': 'text/plain' });
 
+    res.write('This is the list of our students\n');
+
     countStudents(path)
       .then(() => {
         res.end('Done!');
