@@ -73,3 +73,26 @@ def get_db() -> MySQLConnection:
         host=os.getenv("PERSONAL_DATA_DB_HOST", "localhost"),
         database=os.getenv("PERSONAL_DATA_DB_NAME")
     )
+
+
+def main():
+    """
+    The function will obtain a database connection
+    """
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users;")
+
+    logger = get_logger()
+    fields = [i[0] for i in cursor.description]
+
+    for row in cursor:
+        message = "; ".join(f"{k}={v}" for k, v in zip(fields, row)) + ";"
+        logger.info(message)
+
+    cursor.close()
+    db.close()
+
+
+if __name__ == "__main__":
+    main()
