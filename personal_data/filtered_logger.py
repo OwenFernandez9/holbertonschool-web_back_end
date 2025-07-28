@@ -5,6 +5,7 @@ and class RedactingFormatter
 """
 import re
 from typing import List
+import logging
 
 
 def filter_datum(fields: List[str], redaction: str, message: str,
@@ -16,7 +17,6 @@ def filter_datum(fields: List[str], redaction: str, message: str,
     return re.sub(f"({'|'.join(fields)})=.*?{separator}",
                   f"\\1={redaction}{separator}", message)
 
-import logging
 
 
 class RedactingFormatter(logging.Formatter):
