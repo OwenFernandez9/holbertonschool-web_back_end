@@ -66,7 +66,7 @@ def get_logger() -> logging.Logger:
     return logger
 
 
-def get_db() -> MySQLConnection:
+def get_db() -> MySQLConnection: # type: ignore
     """
     Returns a connector to the database.
     """
