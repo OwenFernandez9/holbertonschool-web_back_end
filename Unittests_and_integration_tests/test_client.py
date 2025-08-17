@@ -22,7 +22,9 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.return_value = expected
 
         client = GithubOrgClient(org_name)
-        self.assertEqual(client.org, expected)
+
+        result = client.org
+        self.assertEqual(result, expected)
 
         mock_get_json.assert_called_once_with(
             GithubOrgClient.ORG_URL.format(org=org_name)
