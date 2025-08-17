@@ -4,6 +4,8 @@ from parameterized import parameterized
 from utils import access_nested_map
 from unittest.mock import patch
 from utils import get_json
+from utils import memoize
+
 
 class TestAccessNestedMap(unittest.TestCase):
     @parameterized.expand([
