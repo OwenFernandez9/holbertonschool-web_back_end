@@ -11,7 +11,7 @@ from client import GithubOrgClient
 
 
 class TestGithubOrgClient(unittest.TestCase):
-    """Tests for GithubOrgClient class."""
+    """Unit tests for GithubOrgClient methods."""
 
     @parameterized.expand([
         ("google",),
@@ -19,21 +19,25 @@ class TestGithubOrgClient(unittest.TestCase):
     ])
     @patch("client.get_json")
     def test_org(self, org_name, mock_get_json):
-        """Check .org returns the expected payload and calls get_json once."""
+        """Ensure .org returns the expected payload and calls get_json once."""
         expected = {"org": org_name}
         mock_get_json.return_value = expected
 
         client = GithubOrgClient(org_name)
+        # With @memoize, org behaves like a cached property (no parentheses)
         self.assertEqual(client.org, expected)
         mock_get_json.assert_called_once_with(
             GithubOrgClient.ORG_URL.format(org=org_name)
         )
 
     def test_public_repos_url(self):
-        """Check _public_repos_url matches repos_url from org payload."""
+        """Ensure _public_repos_url matches repos_url from
+        the mocked org payload."""
         payload = {"repos_url": "https://api.github.com/orgs/google/repos"}
-        with patch.object(
-                GithubOrgClient, "org", new_callable=PropertyMock
+
+        # Mock the org “property” (memoize turns it into a cached attribute)
+        with patch(
+                "client.GithubOrgClient.org", new_callable=PropertyMock
                 ) as mock_org:
             mock_org.return_value = payload
             client = GithubOrgClient("google")
@@ -44,7 +48,7 @@ class TestGithubOrgClient(unittest.TestCase):
 
     @patch("client.get_json")
     def test_public_repos(self, mock_get_json):
-        """Check public_repos returns repo names list only."""
+        """Ensure public_repos returns only repo names and calls mocks once."""
         repos_api_url = "https://api.github.com/orgs/google/repos"
         payload = [
             {"name": "repo-uno"},
@@ -53,8 +57,8 @@ class TestGithubOrgClient(unittest.TestCase):
         ]
         mock_get_json.return_value = payload
 
-        with patch.object(GithubOrgClient, "_public_repos_url",
-                          new_callable=PropertyMock) as mock_repos_url:
+        with patch("client.GithubOrgClient._public_repos_url",
+                   new_callable=PropertyMock) as mock_repos_url:
             mock_repos_url.return_value = repos_api_url
 
             client = GithubOrgClient("google")
