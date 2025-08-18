@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Flask+Babel: locale (URL > user > header > default) y timezone (URL > user > UTC)."""
+"""i18n step 7: timezone selector (URL > user > UTC) with validation."""
+
 from flask import Flask, render_template, request, g
 from flask_babel import Babel
 import pytz
@@ -7,7 +8,13 @@ from pytz.exceptions import UnknownTimeZoneError
 
 
 class Config:
-    """Ajustes i18n."""
+    """Basic i18n settings used by the app.
+
+    Attributes:
+        LANGUAGES: Supported locales.
+        BABEL_DEFAULT_LOCALE: Fallback locale.
+        BABEL_DEFAULT_TIMEZONE: Default time zone.
+    """
     LANGUAGES = ["en", "fr"]
     BABEL_DEFAULT_LOCALE = "en"
     BABEL_DEFAULT_TIMEZONE = "UTC"
@@ -16,10 +23,9 @@ class Config:
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
     2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
-    3: {"name": "Spock", "locale": "kg", "timezone": "Vulcan"},
+    3: {"name": "Spock", "locale": "kg", "timezone": "Vulcan"},  # invalid tz
     4: {"name": "Teletubby", "locale": None, "timezone": "Europe/London"},
 }
-
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -27,7 +33,7 @@ babel = Babel()
 
 
 def get_user():
-    """User por ?login_as=<id> o None."""
+    """Return the user selected by ?login_as=<id>, or None."""
     uid = request.args.get("login_as")
     try:
         return users.get(int(uid)) if uid is not None else None
@@ -37,12 +43,13 @@ def get_user():
 
 @app.before_request
 def before_request():
-    """Guarda el user en g.user si existe."""
+    """Attach user to flask.g for this request."""
     g.user = get_user()
 
 
 def get_locale():
-    """Prioridad: ?locale -> user.locale -> Accept-Language -> default."""
+    """Locale priority: URL ?locale ->
+    user.locale -> Accept-Language -> default."""
     param = request.args.get("locale")
     if param in app.config["LANGUAGES"]:
         return param
@@ -55,7 +62,7 @@ def get_locale():
 
 @babel.timezoneselector
 def get_timezone():
-    """Prioridad: ?timezone -> user.timezone (válidos) -> 'UTC'."""
+    """Timezone priority: URL ?timezone -> user.timezone (validated) -> UTC."""
     tz = request.args.get("timezone")
     if tz:
         try:
@@ -63,6 +70,7 @@ def get_timezone():
             return tz
         except UnknownTimeZoneError:
             pass
+
     user = getattr(g, "user", None)
     if user:
         utz = user.get("timezone")
@@ -72,6 +80,7 @@ def get_timezone():
                 return utz
             except UnknownTimeZoneError:
                 pass
+
     return app.config["BABEL_DEFAULT_TIMEZONE"]
 
 
@@ -80,7 +89,8 @@ babel.init_app(app, locale_selector=get_locale, timezone_selector=get_timezone)
 
 @app.route("/")
 def index():
-    return render_template("5-index.html")
+    """Render the localized home page."""
+    return render_template("7-index.html")
 
 
 if __name__ == "__main__":

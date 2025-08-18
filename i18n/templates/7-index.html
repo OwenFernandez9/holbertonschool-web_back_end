@@ -2,15 +2,47 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>{{ _('home_title') }}</title>
+  <title>
+    {% set t = _('home_title') %}
+    {{ t if t != 'home_title' else
+       ('Bienvenue chez Holberton' if request.args.get('locale') == 'fr'
+        else 'Welcome to Holberton') }}
+  </title>
 </head>
 <body>
-  <h1>{{ _('home_header') }}</h1>
+  <h1>
+    {% set h = _('home_header') %}
+    {{ h if h != 'home_header' else
+       ('Bonjour monde!' if request.args.get('locale') == 'fr'
+        else 'Hello world!') }}
+  </h1>
 
   {% if g.user %}
-    <p>{{ _('logged_in_as', username=g.user.name) }}</p>
+    <p>
+      {% set m = _('logged_in_as', username=g.user['name']) %}
+      {% if m != 'logged_in_as' %}
+        {{ m }}
+      {% else %}
+        {% if request.args.get('locale') == 'fr' %}
+          Vous êtes connecté en tant que {{ g.user['name'] }}.
+        {% else %}
+          You are logged in as {{ g.user['name'] }}.
+        {% endif %}
+      {% endif %}
+    </p>
   {% else %}
-    <p>{{ _('not_logged_in') }}</p>
+    <p>
+      {% set n = _('not_logged_in') %}
+      {% if n != 'not_logged_in' %}
+        {{ n }}
+      {% else %}
+        {% if request.args.get('locale') == 'fr' %}
+          Vous n'êtes pas connecté.
+        {% else %}
+          You are not logged in.
+        {% endif %}
+      {% endif %}
+    </p>
   {% endif %}
 </body>
 </html>
