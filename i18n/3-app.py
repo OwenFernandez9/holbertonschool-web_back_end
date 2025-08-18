@@ -1,28 +1,42 @@
 #!/usr/bin/env python3
-"""
-Flask app with Babel i18n, locale selection, and templated message IDs
-"""
+"""Minimal Flask+Babel i18n app. Sirve '/' y elige
+locale por Accept-Language."""
 from flask import Flask, render_template, request
 from flask_babel import Babel
 
+
 class Config:
+    """Ajustes i18n para Babel.
+
+    Attributes:
+        LANGUAGES: Locales soportados.
+        BABEL_DEFAULT_LOCALE: Locale por defecto.
+        BABEL_DEFAULT_TIMEZONE: Zona horaria por defecto.
+    """
     LANGUAGES = ["en", "fr"]
     BABEL_DEFAULT_LOCALE = "en"
     BABEL_DEFAULT_TIMEZONE = "UTC"
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
 babel = Babel()
 
+
 def get_locale():
+    """Mejor coincidencia entre Accept-Language y Config.LANGUAGES."""
     return request.accept_languages.best_match(app.config["LANGUAGES"])
+
 
 babel.init_app(app, locale_selector=get_locale)
 
+
 @app.route("/")
 def index():
+    """Render de la home localizada."""
     return render_template("3-index.html")
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
