@@ -10,6 +10,11 @@ from parameterized import parameterized
 from client import GithubOrgClient
 
 
+def _idx_only_name(func, num, params_dict):
+    """Helper for parameterized to force test names with only the index."""
+    return f"{func.__name__}_{num}"
+
+
 class TestGithubOrgClient(unittest.TestCase):
     """Unit tests for GithubOrgClient methods."""
 
@@ -65,7 +70,7 @@ class TestGithubOrgClient(unittest.TestCase):
     @parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),
         ({"license": {"key": "other_license"}}, "my_license", False),
-    ])
+    ], name_func=_idx_only_name)
     def test_has_license(self, repo, license_key, expected):
         """Ensure has_license returns the expected boolean."""
         self.assertEqual(
