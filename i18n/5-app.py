@@ -39,9 +39,8 @@ def get_locale():
     forced = request.args.get("locale")
     if forced in app.config["LANGUAGES"]:
         return forced
-    return request.accept_languages.best_match(
-        app.config["LANGUAGES"]
-        ) or app.config["BABEL_DEFAULT_LOCALE"]
+    best = request.accept_languages.best_match(app.config["LANGUAGES"])
+    return best or app.config["BABEL_DEFAULT_LOCALE"]
 
 
 babel.init_app(app, locale_selector=get_locale)
