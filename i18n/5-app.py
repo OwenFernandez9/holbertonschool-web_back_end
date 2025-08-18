@@ -1,14 +1,24 @@
 #!/usr/bin/env python3
+"""i18n step 5: mock login and localized messages with Flask-Babel."""
+
 from flask import Flask, render_template, request, g
 from flask_babel import Babel
 
 
 class Config:
+    """Basic i18n settings used by the app.
+
+    Attributes:
+        LANGUAGES: Supported locales.
+        BABEL_DEFAULT_LOCALE: Fallback locale.
+        BABEL_DEFAULT_TIMEZONE: Default time zone.
+    """
     LANGUAGES = ["en", "fr"]
     BABEL_DEFAULT_LOCALE = "en"
     BABEL_DEFAULT_TIMEZONE = "UTC"
 
 
+# Mock user “table”
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
     2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
@@ -16,13 +26,13 @@ users = {
     4: {"name": "Teletubby", "locale": None, "timezone": "Europe/London"},
 }
 
-
 app = Flask(__name__)
 app.config.from_object(Config)
 babel = Babel()
 
 
 def get_user():
+    """Return the user selected by ?login_as=<id>, or None."""
     uid = request.args.get("login_as")
     try:
         return users.get(int(uid)) if uid is not None else None
@@ -32,10 +42,12 @@ def get_user():
 
 @app.before_request
 def before_request():
+    """Attach user to flask.g for this request."""
     g.user = get_user()
 
 
 def get_locale():
+    """Locale priority: URL ?locale -> Accept-Language -> default."""
     forced = request.args.get("locale")
     if forced in app.config["LANGUAGES"]:
         return forced
@@ -48,6 +60,7 @@ babel.init_app(app, locale_selector=get_locale)
 
 @app.route("/")
 def index():
+    """Render the localized home page."""
     return render_template("5-index.html")
 
 

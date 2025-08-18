@@ -3,29 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <title>
-    {# fallback para título #}
     {% set t = _('home_title') %}
     {{ t if t != 'home_title' else 'Welcome to Holberton' }}
   </title>
 </head>
 <body>
   <h1>
-    {# fallback para h1 #}
     {% set h = _('home_header') %}
     {{ h if h != 'home_header' else 'Hello world!' }}
   </h1>
 
+  {% set loc = request.args.get('locale') %}
   {% if g.user %}
     <p>
-      {# fallback para "logged_in_as" con username #}
       {% set m = _('logged_in_as', username=g.user['name']) %}
-      {{ m if m != 'logged_in_as' else ('You are logged in as ' ~ g.user['name'] ~ '.') }}
+      {% if m != 'logged_in_as' %}
+        {{ m }}
+      {% else %}
+        {# fallback sin catálogos: respeta ?locale=fr #}
+        {% if loc == 'fr' %}
+          Vous êtes connecté en tant que {{ g.user['name'] }}.
+        {% else %}
+          You are logged in as {{ g.user['name'] }}.
+        {% endif %}
+      {% endif %}
     </p>
   {% else %}
     <p>
-      {# fallback para "not_logged_in" #}
       {% set n = _('not_logged_in') %}
-      {{ n if n != 'not_logged_in' else 'You are not logged in.' }}
+      {% if n != 'not_logged_in' %}
+        {{ n }}
+      {% else %}
+        {# fallback sin catálogos: respeta ?locale=fr #}
+        {% if loc == 'fr' %}
+          Vous n'êtes pas connecté.
+        {% else %}
+          You are not logged in.
+        {% endif %}
+      {% endif %}
     </p>
   {% endif %}
 </body>
