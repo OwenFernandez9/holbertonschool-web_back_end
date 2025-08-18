@@ -8,6 +8,7 @@ from unittest.mock import patch, PropertyMock
 from parameterized import parameterized
 
 from client import GithubOrgClient
+from fixtures import TEST_PAYLOAD
 
 
 def _idx_only_name(func, num, params_dict):
@@ -77,6 +78,42 @@ class TestGithubOrgClient(unittest.TestCase):
             GithubOrgClient.has_license(repo, license_key),
             expected
         )
+
+
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """
+    Integration tests using fixtures.TEST_PAYLOAD.
+    No HTTP calls: patch client.get_json to return the fixture data.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        org_payload, repos_payload, expected_names, expected_apache = TEST_PAYLOAD[0]
+        cls.org_payload = org_payload
+        cls.repos_payload = repos_payload
+        cls.expected_names = expected_names
+        cls.expected_apache = expected_apache
+        cls.get_json_patcher = patch(
+            "client.get_json"
+        )
+        cls.mock_get_json = cls.get_json_patcher.start()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.get_json_patcher.stop()
+
+    def setUp(self):
+        # Reset side_effect BEFORE each test so both tests get two calls available
+        self.mock_get_json.side_effect = [self.org_payload, self.repos_payload]
+        self.mock_get_json.reset_mock()
+
+    def test_public_repos(self):
+        client = GithubOrgClient("google")
+        self.assertEqual(client.public_repos(), self.expected_names)
+
+    def test_public_repos_with_license(self):
+        client = GithubOrgClient("google")
+        self.assertEqual(client.public_repos(license="apache-2.0"), self.expected_apache)
 
 
 if __name__ == "__main__":
