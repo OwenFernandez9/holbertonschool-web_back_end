@@ -6,7 +6,6 @@ Unit tests for client.py (GithubOrgClient).
 import unittest
 from unittest.mock import patch, PropertyMock
 from parameterized import parameterized
-
 from client import GithubOrgClient
 
 
@@ -67,6 +66,21 @@ class TestGithubOrgClient(unittest.TestCase):
             self.assertEqual(repos, ["repo-uno", "repo-dos", "repo-tres"])
             self.assertEqual(mock_repos_url.call_count, 1)
             mock_get_json.assert_called_once_with(repos_api_url)
+
+
+class TestGithubOrgClient(unittest.TestCase):
+    # ... (tus otros tests)
+
+    @parameterized.expand([
+        ({"license": {"key": "my_license"}}, "my_license", True),
+        ({"license": {"key": "other_license"}}, "my_license", False),
+    ])
+    def test_has_license(self, repo, license_key, expected):
+        """Check has_license returns the expected boolean."""
+        self.assertEqual(
+            GithubOrgClient.has_license(repo, license_key),
+            expected
+        )
 
 
 if __name__ == "__main__":
