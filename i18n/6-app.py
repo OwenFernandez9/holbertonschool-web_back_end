@@ -18,7 +18,6 @@ class Config:
     BABEL_DEFAULT_TIMEZONE = "UTC"
 
 
-# Mock user “table”
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
     2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
@@ -49,15 +48,12 @@ def before_request():
 def get_locale():
     """Locale priority: URL ?locale ->
     user.locale -> Accept-Language -> default."""
-    # 1) URL parameter
     param = request.args.get("locale")
     if param in app.config["LANGUAGES"]:
         return param
-    # 2) User setting
     user = getattr(g, "user", None)
     if user and user.get("locale") in app.config["LANGUAGES"]:
         return user["locale"]
-    # 3) Request header
     best = request.accept_languages.best_match(app.config["LANGUAGES"])
     return best or app.config["BABEL_DEFAULT_LOCALE"]
 

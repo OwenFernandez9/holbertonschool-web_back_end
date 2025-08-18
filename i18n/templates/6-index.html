@@ -3,37 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <title>
-    {# Fallback-aware title (works even without compiled .mo files) #}
-    {% set cur = get_locale() %}
     {% set t = _('home_title') %}
-    {{ t if t != 'home_title'
-         else ('Bienvenue chez Holberton' if cur and cur.language == 'fr'
-               else 'Welcome to Holberton') }}
+    {{ t if t != 'home_title' else
+       ('Bienvenue chez Holberton' if request.args.get('locale') == 'fr'
+        else 'Welcome to Holberton') }}
   </title>
 </head>
 <body>
   <h1>
     {% set h = _('home_header') %}
-    {{ h if h != 'home_header'
-         else ('Bonjour monde!' if cur and cur.language == 'fr'
-               else 'Hello world!') }}
+    {{ h if h != 'home_header' else
+       ('Bonjour monde!' if request.args.get('locale') == 'fr'
+        else 'Hello world!') }}
   </h1>
 
   {% if g.user %}
     <p>
       {% set m = _('logged_in_as', username=g.user['name']) %}
-      {{ m if m != 'logged_in_as'
-           else ('Vous êtes connecté en tant que ' ~ g.user['name'] ~ '.'
-                 if cur and cur.language == 'fr'
-                 else 'You are logged in as ' ~ g.user['name'] ~ '.') }}
+      {% if m != 'logged_in_as' %}
+        {{ m }}
+      {% else %}
+        {# Fallback: show FR only if URL explicitly asks fr, else EN #}
+        {% if request.args.get('locale') == 'fr' %}
+          Vous êtes connecté en tant que {{ g.user['name'] }}.
+        {% else %}
+          You are logged in as {{ g.user['name'] }}.
+        {% endif %}
+      {% endif %}
     </p>
   {% else %}
     <p>
       {% set n = _('not_logged_in') %}
-      {{ n if n != 'not_logged_in'
-           else ("Vous n'êtes pas connecté."
-                 if cur and cur.language == 'fr'
-                 else 'You are not logged in.') }}
+      {% if n != 'not_logged_in' %}
+        {{ n }}
+      {% else %}
+        {% if request.args.get('locale') == 'fr' %}
+          Vous n'êtes pas connecté.
+        {% else %}
+          You are not logged in.
+        {% endif %}
+      {% endif %}
     </p>
   {% endif %}
 </body>
