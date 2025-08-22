@@ -4,6 +4,8 @@
 import redis
 import uuid
 from typing import Union, Optional, Callable, TypeVar
+import functools
+
 
 
 T = TypeVar("T")
