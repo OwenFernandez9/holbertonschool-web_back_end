@@ -24,6 +24,18 @@ def call_history(method: Callable) -> Callable:
     inputs_key = f"{method.__qualname__}:inputs"
     outputs_key = f"{method.__qualname__}:outputs"
 
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        self._redis.rpush(inputs_key, str(args))
+        out = method(self, *args, **kwargs)
+        self._redis.rpush(
+            outputs_key,
+            out if isinstance(out, (str, bytes, int, float)) else str(out)
+        )
+        return out
+
+    return wrapper
+
 
 class Cache:
     def __init__(self):
