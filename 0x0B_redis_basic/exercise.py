@@ -37,7 +37,7 @@ def call_history(method: Callable) -> Callable:
     return wrapper
 
 def replay(method: Callable) -> None:
-    r = redis.Redis()
+    r = method.__self__._redis
 
     qual = method.__qualname__
     in_key = f"{qual}:inputs"
@@ -50,9 +50,9 @@ def replay(method: Callable) -> None:
     inputs = r.lrange(in_key, 0, -1)
     outputs = r.lrange(out_key, 0, -1)
 
-    for i, (args_b, out_b) in enumerate(zip(inputs, outputs)):
-        args_str = args_b.decode("utf-8")
-        out_str = out_b.decode("utf-8")
+    for args_b, out_b in zip(inputs, outputs):
+        args_str = args_b.decode("utf-8", errors="replace")
+        out_str  = out_b.decode("utf-8", errors="replace")
         print(f"{qual}(*{args_str}) -> {out_str}")
 
 
