@@ -9,11 +9,23 @@ from typing import Union, Optional, Callable, TypeVar
 T = TypeVar("T")
 
 
+
+def count_calls(method: Callable) -> Callable:
+    """Decorator que cuenta cuántas veces se llama un método"""
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        key = method.__qualname__
+        self._redis.incr(key)
+        return method(self, *args, **kwargs)
+    return wrapper
+
+
 class Cache:
     def __init__(self):
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         key = str(uuid.uuid4())
         self._redis.set(key, data)
