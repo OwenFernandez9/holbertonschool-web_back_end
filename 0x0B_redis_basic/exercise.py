@@ -6,7 +6,7 @@ import uuid
 from typing import Union
 
 
-class Cache: 
+class Cache:
     def __init__(self):
         self._redis = redis.Redis()
         self._redis.flushdb()
