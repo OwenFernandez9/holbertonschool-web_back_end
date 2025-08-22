@@ -79,3 +79,11 @@ class Cache:
 
     def get_int(self, key: str) -> Optional[int]:
         return self.get(key, fn=int)
+
+if __name__ == "__main__":
+    cache = Cache()
+    cache.store("foo")
+    cache.store("bar")
+    cache.store(42)
+
+    replay(cache.store)
