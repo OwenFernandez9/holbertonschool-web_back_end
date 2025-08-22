@@ -11,7 +11,6 @@ T = TypeVar("T")
 
 
 def count_calls(method: Callable) -> Callable:
-    """Decorator que cuenta cuántas veces se llama un método"""
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
         key = method.__qualname__
